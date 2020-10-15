@@ -43,6 +43,10 @@ def get_CA(vector, X, Y):
         return np.mean(model.fit(X_train, Y_train).predict(X_test) == Y_test)
 
 
+def get_DR(vector):
+    return np.mean(vector == 0)
+
+
 def load_data(data='glass'):
     if data == 'glass':
         df = pd.read_csv(os.path.join(data_path, data_file[data]), header=None)
