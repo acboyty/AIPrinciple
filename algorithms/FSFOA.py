@@ -86,12 +86,11 @@ def FSFOA(X, Y, LSC, life_time, area_limit, transfer_rate, GSC):
     candidate_forest = []
 
     for epoch in range(cfg.epoch):
-        print(epoch, forest[0].CA, len(forest), len(candidate_forest))
         forest = local_seeding(forest, LSC, X, Y)
         forest, candidate_forest = population_limiting(forest, candidate_forest, life_time, area_limit)
         forest, candidate_forest = global_seeding(forest, candidate_forest, transfer_rate, GSC, X, Y)
         forest, candidate_forest = update_best_tree(forest, candidate_forest)
-        
+        print(epoch, forest[0].CA, len(forest), len(candidate_forest))
     
     return forest[0].vector
         

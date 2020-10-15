@@ -5,7 +5,16 @@ from utils import get_CA, get_DR
 import numpy as np
 
 params = {
+    'heart': {'LSC': 3, 'GSC': 6},
+    'cleveland': {'LSC': 3, 'GSC': 6},
+    'dermatology': {'LSC': 7, 'GSC': 15},
+    'ionosphere': {'LSC': 7, 'GSC': 15},
+    'wine': {'LSC': 3, 'GSC': 6},
+    'vehicle': {'LSC': 4, 'GSC': 9},
+    'sonar': {'LSC': 12, 'GSC': 30},
     'glass': {'LSC': 2, 'GSC': 4},
+    'segmentation': {'LSC': 4, 'GSC': 9},
+    'hepatitis': {'LSC': 4, 'GSC': 10},
 }
 
 

@@ -11,8 +11,16 @@ from sklearn.model_selection import KFold, train_test_split
 data_path = './datasets/'
 
 data_file = {
+    'heart': 'heart.dat',
+    'cleveland': 'cleveland.csv',
+    'dermatology': 'dermatology.data',
+    'ionosphere': 'ionosphere.data',
+    'wine': 'wine.data',
+    'vehicle': 'vehicle.csv',
+    'sonar': 'sonar.all-data',
     'glass': 'glass.data',
-    'cleveland': 'cleveland.data'
+    'segmentation': 'segmentation.test',
+    'hepatitis': 'hepatitis.data',
 }
 
 
@@ -48,13 +56,37 @@ def get_DR(vector):
 
 
 def load_data(data='glass'):
-    if data == 'glass':
-        df = pd.read_csv(os.path.join(data_path, data_file[data]), header=None)
-        # print(df.head())
-        data = df.values
+    if data == 'heart':
+        data = pd.read_table(os.path.join(data_path, data_file[data]), header=None, sep=' ').values
+        X, Y = data[:, :-1], data[:, -1]
+    elif data in ['vehicle', 'cleveland']:
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).values
+        X, Y = data[:, :-1], data[:, -1]
+    elif data == 'dermatology':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).replace('?', 0).values
+        X, Y = data[:, :-1], data[:, -1]
+    elif data == 'ionosphere':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).replace('g', 0).replace('b', 1).values
+        X, Y = data[:, :-1], data[:, -1]
+    elif data == 'sonar':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).replace('R', 0).replace('M', 1).values
+        X, Y = data[:, :-1], data[:, -1]
+    elif data == 'glass':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).values
         X, Y = data[:, 1:-1], data[:, -1]
-    elif data == 'cleveland':
-        df = pd.read_table(os.path.join(data_path, data_file[data]))
+    elif data == 'wine':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).values
+        X, Y = data[:, 1:], data[:, 0]
+    elif data == 'segmentation':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None)
+        for idx, x in enumerate(set(data.iloc[:, 0])):
+            data.replace(x, idx, inplace=True)
+        data = data.values
+        X, Y = data[:, 1:], data[:, 0]
+    elif data == 'hepatitis':
+        data = pd.read_csv(os.path.join(data_path, data_file[data]), header=None).replace('?', 0).values
+        X, Y = data[:, 1:], data[:, 0]
+    
     return scale(X), Y.astype('int')
 
 
