@@ -37,7 +37,7 @@ def population_limiting(forest, candidate_forest, life_time, area_limit):
             candidate_forest.append(tree)
         else:
             temp_forest.append(tree)
-    
+
     # area limit
     if len(temp_forest) > area_limit:
         temp_forest.sort(key=lambda tree: tree.CA, reverse=True)
@@ -56,7 +56,8 @@ def global_seeding(forest, candidate_forest, transfer_rate, GSC, X, Y):
         gen_tree = deepcopy(candidate_forest[idx])
         seeds = set()
         while len(seeds) < GSC:
-            seeds.add(np.random.randint(0, candidate_forest[idx].vector.shape[0]))
+            seeds.add(np.random.randint(
+                0, candidate_forest[idx].vector.shape[0]))
         for seed in seeds:
             gen_tree.vector[seed] = 0 if gen_tree.vector[seed] == 1 else 1
         gen_tree.CA = get_CA(gen_tree.vector, X, Y)
@@ -67,7 +68,7 @@ def global_seeding(forest, candidate_forest, transfer_rate, GSC, X, Y):
 def update_best_tree(forest, candidate_forest):
     if len(candidate_forest) == 0:
         return forest, candidate_forest
-    
+
     candidate_forest.sort(key=lambda tree: tree.CA, reverse=True)
     candidate_forest[0].age = 0
     forest.append(candidate_forest[0])
@@ -79,19 +80,23 @@ def FSFOA(X, Y, LSC, life_time, area_limit, transfer_rate, GSC):
     X: features, size (n, m), ndarray format
     Y: labels, size (n), ndarray format
     """
-    n, m = X.shape
+    _, m = X.shape
 
     # Initialize trees
     forest = [Tree(m, X, Y) for _ in range(area_limit // 10)]
     candidate_forest = []
 
-    for epoch in range(cfg.epoch):
+    training_info = []
+    for epoch in tqdm(range(cfg.epoch)):
+        training_info.append({'epoch': epoch, 'CA': forest[0].CA, 'len(forest)': len(
+            forest), 'len(candidate_forest)': len(candidate_forest)})
         forest = local_seeding(forest, LSC, X, Y)
-        forest, candidate_forest = population_limiting(forest, candidate_forest, life_time, area_limit)
-        forest, candidate_forest = global_seeding(forest, candidate_forest, transfer_rate, GSC, X, Y)
+        forest, candidate_forest = population_limiting(
+            forest, candidate_forest, life_time, area_limit)
+        forest, candidate_forest = global_seeding(
+            forest, candidate_forest, transfer_rate, GSC, X, Y)
         forest, candidate_forest = update_best_tree(forest, candidate_forest)
-        print(epoch, forest[0].CA, len(forest), len(candidate_forest))
-    
-    return forest[0].vector
-        
+        # choose the best CA
+        forest.sort(key=lambda tree: tree.CA, reverse=True)
 
+    return forest[0].vector, training_info

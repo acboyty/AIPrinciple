@@ -1,16 +1,19 @@
 class config:
+    # 'origin', 'improve'
+    method = 'origin'
+
     # 'heart', 'cleveland', 'dermatology', 'ionosphere', 'wine', 'vehicle', 'sonar', 'glass', 'segmentation', 'hepatitis'
-    data = 'segmentation'
+    data = 'sonar'
 
     # 1NN, 3NN, 5NN, SVM, C4.5
-    classifier = '3NN'
+    classifier = 'SVM'
 
     life_time = 15
     area_limit = 50
     transfer_rate = 0.05
 
     # 10-fold, 2-fold, 7-3
-    fitness_type = '7-3'
+    fitness_type = '10-fold'
 
     # usually 10-50
-    epoch = 15
+    epoch = 20

@@ -47,7 +47,6 @@ def get_CA(vector, X, Y):
         return np.array(Acc).mean()
     elif cfg.fitness_type == '7-3':
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, shuffle=True)
-        pred = model.fit(X_train, Y_train).predict(X_test)
         return np.mean(model.fit(X_train, Y_train).predict(X_test) == Y_test)
 
 
